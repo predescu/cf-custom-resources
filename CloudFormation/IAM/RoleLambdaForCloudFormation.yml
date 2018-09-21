@@ -1,0 +1,59 @@
+Type: 'AWS::IAM::Role'
+Properties:
+  RoleName: LambdaForCloudFormation
+  AssumeRolePolicyDocument:
+    Version: '2012-10-17'
+    Statement:
+      -
+        Effect: Allow
+        Action: 'sts:AssumeRole'
+        Principal:
+          Service: lambda.amazonaws.com
+  Policies:
+    -
+      PolicyName: WriteCloudWatchLogs
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Action:
+              - 'logs:CreateLogGroup'
+              - 'logs:CreateLogStream'
+              - 'logs:PutLogEvents'
+            Resource: 'arn:aws:logs:*:*:*'
+    -
+      PolicyName: UpdateUserPoolClient
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Action: 'cognito-idp:UpdateUserPoolClient'
+            Resource: 'arn:aws:cognito-idp:*:*:userpool/*'
+    -
+      PolicyName: ManageUserPoolDomain
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Action: 'cognito-idp:CreateUserPoolDomain'
+            Resource: 'arn:aws:cognito-idp:*:*:userpool/*'
+          -
+            Effect: Allow
+            Action: 'cognito-idp:DeleteUserPoolDomain'
+            Resource: 'arn:aws:cognito-idp:*:*:userpool/*'
+          -
+            Effect: Allow
+            Action: 'cognito-idp:DescribeUserPoolDomain'
+            Resource: '*'
+    -
+      PolicyName: InvokeLambdaFunction
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Action: 'lambda:InvokeFunction'
+            Resource: 'arn:aws:lambda:*:*:function:*'

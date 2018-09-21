@@ -1,0 +1,53 @@
+service: cf-custom-resources
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'beta'}
+
+package:
+  individually: true
+  exclude:
+  - ./**
+  include:
+  - 'node_modules/**'
+
+functions:
+  CloudFormationSendResponse:
+    handler: CloudFormationSendResponse.handler
+    package:
+      include:
+      - CloudFormationSendResponse.js
+  CognitoUserPoolClientSettings:
+    handler: CloudFormationCognitoUserPoolClientSettings.handler
+    package:
+      include:
+      - CloudFormationCognitoUserPoolClientSettings.js
+  CognitoUserPoolDomain:
+    handler: CloudFormationCognitoUserPoolDomain.handler
+    package:
+      include:
+      - CloudFormationCognitoUserPoolDomain.js
+
+resources:
+  Resources:
+    IAMRoleLambdaForCloudFormation: ${file(./CloudFormation/IAM/RoleLambdaForCloudFormation.yml)}
+
+  Outputs:
+    CloudFormationSendResponseArn:
+      Description: Custom CloudFormation Resource Handler for Cognito
+      Export:
+        Name: ${self:service}-${self:provider.stage}-CloudFormationSendResponseArn
+      Value:
+        Fn::GetAtt: [ CloudFormationSendResponseLambdaFunction, Arn ]
+    CognitoUserPoolClientSettingsArn:
+      Description: Custom CloudFormation Resource Handler for Cognito User Pool Client
+      Export:
+        Name: ${self:service}-${self:provider.stage}-CognitoUserPoolClientSettingsArn
+      Value:
+        Fn::GetAtt: [ CognitoUserPoolClientSettingsLambdaFunction, Arn ]
+    CognitoUserPoolDomainArn:
+      Description: Custom CloudFormation Resource Handler for Cognito User Pool Domain
+      Export:
+        Name: ${self:service}-${self:provider.stage}-CognitoUserPoolDomainArn
+      Value:
+        Fn::GetAtt: [ CognitoUserPoolDomainLambdaFunction, Arn ]
