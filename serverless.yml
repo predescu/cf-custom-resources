@@ -3,6 +3,7 @@ provider:
   name: aws
   runtime: nodejs8.10
   stage: ${opt:stage, 'beta'}
+  role: IAMRoleLambdaForCloudFormation
 
 package:
   individually: true
