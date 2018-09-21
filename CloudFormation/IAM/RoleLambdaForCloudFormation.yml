@@ -19,7 +19,9 @@ Properties:
             Effect: Allow
             Action:
               - 'logs:CreateLogGroup'
+              - 'logs:DeleteLogGroup'
               - 'logs:CreateLogStream'
+              - 'logs:DeleteLogStream'
               - 'logs:PutLogEvents'
             Resource: 'arn:aws:logs:*:*:*'
     -
@@ -57,3 +59,16 @@ Properties:
             Effect: Allow
             Action: 'lambda:InvokeFunction'
             Resource: 'arn:aws:lambda:*:*:function:*'
+
+    - PolicyName: ManageUserPoolIdentityProvider
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - 'cognito-idp:CreateIdentityProvider'
+          - 'cognito-idp:DeleteIdentityProvider'
+          Resource: 'arn:aws:cognito-idp:*:*:userpool/*'
+        - Effect: Allow
+          Action: 'cognito-idp:DescribeIdentityProvider'
+          Resource: '*'

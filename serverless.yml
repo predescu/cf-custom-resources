@@ -15,6 +15,7 @@ package:
 functions:
   CloudFormationSendResponse:
     handler: CloudFormationSendResponse.handler
+    name: CloudFormationSendResponse
     package:
       include:
       - CloudFormationSendResponse.js
@@ -28,6 +29,11 @@ functions:
     package:
       include:
       - CloudFormationCognitoUserPoolDomain.js
+  CognitoUserPoolIdentityProviders:
+    handler: CognitoUserPoolIdentityProviders.handler
+    package:
+      include:
+      - CloudFormationCognitoUserPoolIdentityProviders.js
 
 resources:
   Resources:
@@ -52,3 +58,9 @@ resources:
         Name: ${self:service}-${self:provider.stage}-CognitoUserPoolDomainArn
       Value:
         Fn::GetAtt: [ CognitoUserPoolDomainLambdaFunction, Arn ]
+    CognitoUserPoolIdentityProvidersArn:
+      Description: Custom CloudFormation Resource Handler for Cognito User Pool Identity Providers
+      Export:
+        Name: ${self:service}-${self:provider.stage}-CognitoUserPoolIdentityProvidersArn
+      Value:
+        Fn::GetAtt: [ CognitoUserPoolIdentityProvidersLambdaFunction, Arn ]
